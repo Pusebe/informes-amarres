@@ -25,11 +25,14 @@ archivo_subido = st.file_uploader("Sube tu archivo CSV o Excel aquí", type=["cs
 # 4. Procesamiento si el usuario ha subido algo
 if archivo_subido is not None:
     try:
-        # Leemos el archivo (teniendo en cuenta las 2 filas de cabecera que vimos)
+        # Leemos el archivo saltando 3 filas (para llegar a la cabecera real)
         if archivo_subido.name.endswith('.csv'):
-            df = pd.read_csv(archivo_subido, skiprows=2)
+            df = pd.read_csv(archivo_subido, skiprows=3)
         else:
-            df = pd.read_excel(archivo_subido, skiprows=2)
+            df = pd.read_excel(archivo_subido, skiprows=3)
+        
+        # Limpiamos espacios en blanco invisibles en los nombres de las columnas
+        df.columns = df.columns.str.strip()
 
         ocupacion_por_eslora = defaultdict(int)
 
